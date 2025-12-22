@@ -1,17 +1,23 @@
-import { useState } from 'react'
-import { useAppStore } from './store/appStore'
-import { usePhaseFilter } from './hooks/usePhaseFilter'
-import PhaseIndicator from './components/PhaseIndicator'
-import RecallCardList from './components/RecallCardList'
-import CreateRecallModal from './components/CreateRecallModal'
-import OnboardingModal from './components/OnboardingModal'
+import { useState } from "react";
+import { useAppStore } from "./store/appStore";
+import { usePhaseFilter } from "./hooks/usePhaseFilter";
+import PhaseIndicator from "./components/PhaseIndicator";
+import RecallCardList from "./components/RecallCardList";
+import CreateRecallModal from "./components/CreateRecallModal";
+import OnboardingModal from "./components/OnboardingModal";
 
 export default function App() {
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [showOnboarding, setShowOnboarding] = useState(!(window.navigator as any).standalone)
+  const [showOnboarding, setShowOnboarding] = useState(
+    !(navigator as unknown as { standalone?: boolean }).standalone
+  )
 
-  const { currentPhase, isCriticalPhase, recallItems } = useAppStore()
-  const filteredItems = usePhaseFilter(currentPhase, recallItems, isCriticalPhase)
+  const { currentPhase, isCriticalPhase, recallItems } = useAppStore();
+  const filteredItems = usePhaseFilter(
+    currentPhase,
+    recallItems,
+    isCriticalPhase
+  );
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col safe-bottom">
@@ -31,16 +37,12 @@ export default function App() {
       </button>
 
       {showCreateModal && (
-        <CreateRecallModal
-          onClose={() => setShowCreateModal(false)}
-        />
+        <CreateRecallModal onClose={() => setShowCreateModal(false)} />
       )}
 
       {showOnboarding && (
-        <OnboardingModal
-          onClose={() => setShowOnboarding(false)}
-        />
+        <OnboardingModal onClose={() => setShowOnboarding(false)} />
       )}
     </div>
-  )
+  );
 }

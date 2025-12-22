@@ -45,7 +45,7 @@ describe('useRecallManager - CRUD Operations', () => {
     const invalidItem = {
       title: 'Test',
       description: 'Missing phases',
-      phases: [] as any[],
+      phases: [] as unknown[],
       reference: '',
     }
 

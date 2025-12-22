@@ -40,10 +40,10 @@ export class StorageManager {
         try {
             const isPersisted = await navigator.storage.persist();
             if (isPersisted) {
-                console.log('✓ Persistent storage granted');
+                console.warn('✓ Persistent storage granted');
             }
             else {
-                console.log('⚠ Persistent storage not granted - data may be deleted after 7 days');
+                console.warn('⚠ Persistent storage not granted - data may be deleted after 7 days');
             }
             return isPersisted;
         }

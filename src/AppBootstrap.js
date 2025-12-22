@@ -1,9 +1,9 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useEffect } from 'react';
-import { StorageManager } from './lib/database';
-import { useAppStore } from './store/appStore';
-import './index.css';
-import App from './App';
+import { useEffect } from "react";
+import { StorageManager } from "./lib/database";
+import { useAppStore } from "./store/appStore";
+import "./index.css";
+import App from "./App";
 export function AppBootstrap() {
     useEffect(() => {
         // Initialize app on mount
@@ -22,7 +22,7 @@ export function AppBootstrap() {
                 useAppStore.getState().setActiveFlightList(lists[0].id || null);
             }
         };
-        initializeApp().catch(err => console.error('Failed to initialize app:', err));
+        initializeApp().catch((err) => console.error("Failed to initialize app:", err));
     }, []);
     return _jsx(App, {});
 }
