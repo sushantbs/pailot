@@ -36,11 +36,15 @@
   - **9 Unit Tests** - All passing
 
 ### Phase 5: UI Components (iOS Safari Optimized)
-- ✅ **PhaseIndicator** - Sticky header with current phase, item count, Tier-1 toggle
+- ✅ **PhaseIndicator** - Sticky header with current phase, item count, Tier-1 toggle (legacy)
 - ✅ **RecallCard** - Visual display with threats (yellow), reference (grey), phase badges
 - ✅ **RecallCardList** - Scrollable list with empty state messaging
 - ✅ **CreateRecallModal** - Multi-select phases, media upload, threat input
 - ✅ **OnboardingModal** - PWA install instructions for iOS Safari
+- ✅ **FlightListScreen** - Home screen showing all flights sorted by departure time
+- ✅ **FlightCreationModal** - Airport codes, departure/arrival date/time, auto-generated title
+- ✅ **PhaseSidebar** - Vertical left sidebar with phase navigation, Tier-1 toggle, prev/next buttons
+- ✅ **FlightDetailView** - Flight-centric view with sidebar, dark header, recall item management
 
 ### Phase 6: Integration & Lifecycle Testing
 - ✅ **Flight Lifecycle Tests** - Taxi → Approach phase transitions
@@ -51,47 +55,67 @@
 
 ## 📊 Test Results
 ```
-Test Files  3 passed (3)
-      Tests  23 passed (23)
-   Duration  457ms
+Test Files  6 passed (6)
+      Tests  46 passed (46)
+   Duration  652ms
 ```
 
 ## 🎯 Build Status
 - ✅ TypeScript Compilation - Zero errors
-- ✅ Vite Bundle - 57 modules, 256.59 kB (83.41 kB gzipped)
-- ✅ Production Build - Ready for deployment
+- ✅ Vite Bundle - 60 modules, 265.25 kB (84.96 kB gzipped)
+- ✅ Production Build - Ready for deployment (output to dist/)
 - ✅ Dev Server - Running on http://localhost:5173
+- ✅ ESLint Verification - Zero linting violations
 
 ## 📁 Project Structure
 ```
 src/
-├── App.tsx                    # Main app component
-├── AppBootstrap.tsx          # App initialization with storage
-├── index.css                 # Tailwind + custom styles
-├── main.tsx                  # React entry point
+├── App.tsx                       # Root component routing to FlightListScreen
+├── AppBootstrap.tsx              # App initialization with storage
+├── index.css                     # Tailwind + custom styles
+├── main.tsx                      # React entry point
 ├── components/
-│   ├── CreateRecallModal.tsx # Item creation form
-│   ├── OnboardingModal.tsx   # PWA install guide
-│   ├── PhaseIndicator.tsx    # Phase selection & display
-│   ├── RecallCard.tsx        # Individual item display
-│   └── RecallCardList.tsx    # List container
+│   ├── CreateRecallModal.tsx     # Item creation form
+│   ├── FlightCreationModal.tsx   # Flight creation with auto-title
+│   ├── FlightDetailView.tsx      # Flight-centric view with sidebar
+│   ├── FlightListScreen.tsx      # Home screen showing all flights
+│   ├── OnboardingModal.tsx       # PWA install guide
+│   ├── PhaseIndicator.tsx        # Legacy: phase selection & display
+│   ├── PhaseSidebar.tsx          # Vertical phase navigation
+│   ├── RecallCard.tsx            # Individual item display
+│   └── RecallCardList.tsx        # List container
 ├── hooks/
-│   ├── usePhaseFilter.ts     # Filtering logic
-│   ├── usePhaseFilter.test.ts # Filter tests (9 tests)
-│   ├── useRecallManager.ts   # CRUD logic
-│   └── useRecallManager.test.ts # Manager tests (8 tests)
+│   ├── usePhaseFilter.ts         # Filtering logic
+│   ├── usePhaseFilter.test.ts    # Filter tests (9 tests)
+│   ├── usePhaseFilter.test.js    # Filter tests JS variant (9 tests)
+│   ├── useRecallManager.ts       # CRUD logic
+│   ├── useRecallManager.test.ts  # Manager tests (8 tests)
+│   └── useRecallManager.test.js  # Manager tests JS variant (8 tests)
 ├── lib/
-│   ├── database.ts           # Dexie.js setup & StorageManager
-│   └── database.test.ts      # Integration tests (6 tests)
+│   ├── database.ts               # Dexie.js setup & StorageManager
+│   ├── database.test.ts          # Integration tests (6 tests)
+│   └── database.test.js          # Integration tests JS variant (6 tests)
 ├── store/
-│   └── appStore.ts           # Zustand state management
+│   └── appStore.ts               # Zustand state management
 ├── test/
-│   └── setup.ts              # Vitest environment setup
+│   └── setup.ts                  # Vitest environment setup
 └── types/
-    └── index.ts              # TypeScript definitions
+    └── index.ts                  # TypeScript definitions
 ```
 
 ## 🚀 Next Steps (Optional Enhancements)
+
+### Design Guidelines Integration
+The implementation now follows the design principles defined in `agents/design.md`:
+
+1. **Glanceable Interface** - Flight list home screen with quick visual scanning of departure/arrival times, durations, item counts
+2. **Phase-Aware Recall** - PhaseSidebar enables quick phase navigation without leaving flight context; prev/next buttons show phase progression
+3. **Vertical Phase Rail** - PhaseSidebar on left side (16px width) with abbreviated phase names instead of horizontal tabs
+4. **Flight-Centric Navigation** - FlightDetailView shows recall items within active flight context, not globally
+5. **Auto-Generated Titles** - FlightCreationModal creates title like "JFK-LAX 0830" from airport codes and departure time
+6. **Dark Theme** - Header in gray-900, sidebar in gray-800 for reduced glare on iPad in cockpit
+
+### Future Enhancements
 
 1. **PWA Icons** - Add icon assets (192x192, 512x512, maskable variants)
 2. **Data Export/Import** - Allow pilots to backup/restore data
@@ -113,8 +137,10 @@ src/
 
 ## 🎓 Architecture Highlights
 - **Offline-First**: All data stored in IndexedDB, no server required
-- **Deterministic**: Zero-latency phase filtering via pure functions
-- **Trust Architecture**: No auto-complete, strict input validation
-- **iOS/Safari**: Viewport-fit=cover, standalone manifest, safe area utilities
-- **Testing**: 100% test coverage on business logic (23 passing tests)
-- **Mobile-First**: Touch-friendly buttons (48px minimum), responsive layout
+- **Flight-Centric**: UI organized around flights, not generic recall items
+- **Deterministic Filtering**: Zero-latency phase filtering via pure functions
+- **Trust Architecture**: No auto-complete, strict input validation, explicit phase selection
+- **Design-Driven**: Phase sidebar, auto-generated flight titles, glanceable flight list
+- **iOS/Safari**: Viewport-fit=cover, standalone manifest, safe area utilities, 16px inputs
+- **Testing**: 46 passing tests across hooks, database, and lifecycle integration
+- **Mobile-First**: Touch-friendly buttons (48px minimum), dark theme for cockpit visibility
