@@ -32,7 +32,7 @@ export default function FlightDetailView({
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { currentPhase, isCriticalPhase, recallItems, setCurrentPhase } =
+  const { currentPhase, isCriticalPhase, recallItems, setCurrentPhase, setActiveFlightList } =
     useAppStore();
   const filteredItems = usePhaseFilter(
     currentPhase,
@@ -47,6 +47,7 @@ export default function FlightDetailView({
       const flightData = await StorageManager.getFlightList(flightId);
       if (flightData) {
         setFlight(flightData);
+        setActiveFlightList(flightId);
 
         // Load recall items for this flight
         const items = await StorageManager.getFlightListItems(flightId);
@@ -56,7 +57,7 @@ export default function FlightDetailView({
     };
 
     loadFlight();
-  }, [flightId]);
+  }, [flightId, setActiveFlightList]);
 
   const handlePrevPhase = () => {
     if (currentPhaseIndex > 0) {

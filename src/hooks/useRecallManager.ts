@@ -41,6 +41,18 @@ export function useRecallManager() {
 
       if (storedItem) {
         useAppStore.getState().addRecallItem(storedItem)
+        
+        // Add item to the current flight's activeItemIds
+        const state = useAppStore.getState()
+        if (state.activeFlightListId) {
+          const flight = await StorageManager.getFlightList(state.activeFlightListId)
+          if (flight) {
+            const updatedActiveItemIds = [...flight.activeItemIds, id]
+            await StorageManager.updateFlightList(state.activeFlightListId, {
+              activeItemIds: updatedActiveItemIds,
+            })
+          }
+        }
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to add recall item'
@@ -92,6 +104,18 @@ export function useRecallManager() {
     try {
       await StorageManager.deleteRecallItem(id)
       useAppStore.getState().removeRecallItem(id)
+      
+      // Remove item from the current flight's activeItemIds
+      const state = useAppStore.getState()
+      if (state.activeFlightListId) {
+        const flight = await StorageManager.getFlightList(state.activeFlightListId)
+        if (flight) {
+          const updatedActiveItemIds = flight.activeItemIds.filter(itemId => itemId !== id)
+          await StorageManager.updateFlightList(state.activeFlightListId, {
+            activeItemIds: updatedActiveItemIds,
+          })
+        }
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to delete recall item'
       setError(message)
