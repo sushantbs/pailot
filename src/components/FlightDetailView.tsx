@@ -30,6 +30,7 @@ export default function FlightDetailView({
 }: FlightDetailViewProps) {
   const [flight, setFlight] = useState<FlightList | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showPhaseDrawer, setShowPhaseDrawer] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const { currentPhase, isCriticalPhase, recallItems, setCurrentPhase, setActiveFlightList } =
@@ -71,11 +72,6 @@ export default function FlightDetailView({
     }
   };
 
-  const handleAddItemForPhase = (phase: FlightPhase) => {
-    setCurrentPhase(phase);
-    setShowCreateModal(true);
-  };
-
   if (loading || !flight) {
     return (
       <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
@@ -92,12 +88,13 @@ export default function FlightDetailView({
   const arrivalDate = new Date(flight.arrivalTime);
 
   return (
-    <div className="fixed inset-0 bg-white flex z-50 safe-bottom">
-      {/* Sidebar with Phases */}
+    <div className="fixed inset-0 bg-white flex flex-col z-50 safe-bottom">
+      {/* Phase Drawer */}
       <PhaseSidebar
         currentPhase={currentPhase}
         isCriticalPhase={isCriticalPhase}
-        onAddItemForPhase={handleAddItemForPhase}
+        isOpen={showPhaseDrawer}
+        onClose={() => setShowPhaseDrawer(false)}
       />
 
       {/* Main Content */}
@@ -105,7 +102,16 @@ export default function FlightDetailView({
         {/* Header */}
         <div className="bg-gray-900 text-white px-4 py-4 border-b border-gray-800 safe-top">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold">{flight.title}</h1>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowPhaseDrawer(true)}
+                className="text-2xl text-gray-400 hover:text-white transition-colors"
+                title="Open phases"
+              >
+                ☰
+              </button>
+              <h1 className="text-2xl font-bold">{flight?.title}</h1>
+            </div>
             <button
               onClick={onClose}
               className="text-2xl text-gray-400 hover:text-white font-light"
@@ -134,8 +140,11 @@ export default function FlightDetailView({
         </div>
 
         {/* Recall Items */}
-        <div className="flex-1 overflow-y-auto bg-gray-50">
-          <RecallCardList items={filteredItems} />
+        <div className="flex-1">
+          <RecallCardList 
+            items={filteredItems}
+            onAddItem={() => setShowCreateModal(true)}
+          />
         </div>
 
         {showCreateModal && (
