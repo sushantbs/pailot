@@ -131,8 +131,13 @@ describe('Flight Lifecycle Integration Tests', () => {
     })
 
     // Create a flight list
+    const now = Date.now()
     const flightListId = await StorageManager.addFlightList({
-      date: Date.now(),
+      fromAirport: 'JFK',
+      toAirport: 'LAX',
+      departureTime: now,
+      arrivalTime: now + 5 * 60 * 60 * 1000,
+      title: 'JFK-LAX 0900',
       activeItemIds: [id1, id2],
       notes: 'Test Flight',
     })
@@ -162,8 +167,13 @@ describe('Flight Lifecycle Integration Tests', () => {
     })
 
     // Create flight list with only first item
+    const now = Date.now()
     const flightListId = await StorageManager.addFlightList({
-      date: Date.now(),
+      fromAirport: 'SFO',
+      toAirport: 'SJC',
+      departureTime: now,
+      arrivalTime: now + 1 * 60 * 60 * 1000,
+      title: 'SFO-SJC 1000',
       activeItemIds: [id1],
     })
 
@@ -182,8 +192,13 @@ describe('Flight Lifecycle Integration Tests', () => {
       reference: '',
     })
 
+    const now = Date.now()
     const flightListId = await StorageManager.addFlightList({
-      date: Date.now(),
+      fromAirport: 'ORD',
+      toAirport: 'MIA',
+      departureTime: now,
+      arrivalTime: now + 3 * 60 * 60 * 1000,
+      title: 'ORD-MIA 1200',
       activeItemIds: [id1],
       notes: 'Original',
     })

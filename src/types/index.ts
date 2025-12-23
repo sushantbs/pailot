@@ -19,7 +19,11 @@ export interface RecallItem {
 
 export interface FlightList {
   id?: number
-  date: number
+  fromAirport: string
+  toAirport: string
+  departureTime: number
+  arrivalTime: number
+  title: string
   activeItemIds: number[]
   notes?: string
   createdAt: number
