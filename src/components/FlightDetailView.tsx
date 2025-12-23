@@ -2,10 +2,22 @@ import { useState, useEffect } from 'react'
 import { useAppStore } from '../store/appStore'
 import { usePhaseFilter } from '../hooks/usePhaseFilter'
 import { StorageManager } from '../lib/database'
-import { FlightList } from '../types/index'
+import { FlightList, FlightPhase } from '../types/index'
 import PhaseSidebar from './PhaseSidebar'
 import RecallCardList from './RecallCardList'
 import CreateRecallModal from './CreateRecallModal'
+
+const FLIGHT_PHASES: FlightPhase[] = [
+  'Preflight',
+  'Taxi',
+  'Takeoff',
+  'Climb',
+  'Cruise',
+  'Descent',
+  'Approach',
+  'Landing',
+  'Shutdown',
+]
 
 interface FlightDetailViewProps {
   flightId: number
@@ -17,8 +29,10 @@ export default function FlightDetailView({ flightId, onClose }: FlightDetailView
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const { currentPhase, isCriticalPhase, recallItems } = useAppStore()
+  const { currentPhase, isCriticalPhase, recallItems, setCurrentPhase } = useAppStore()
   const filteredItems = usePhaseFilter(currentPhase, recallItems, isCriticalPhase)
+
+  const currentPhaseIndex = FLIGHT_PHASES.indexOf(currentPhase)
 
   useEffect(() => {
     const loadFlight = async () => {
@@ -36,6 +50,23 @@ export default function FlightDetailView({ flightId, onClose }: FlightDetailView
     loadFlight()
   }, [flightId])
 
+  const handlePrevPhase = () => {
+    if (currentPhaseIndex > 0) {
+      setCurrentPhase(FLIGHT_PHASES[currentPhaseIndex - 1])
+    }
+  }
+
+  const handleNextPhase = () => {
+    if (currentPhaseIndex < FLIGHT_PHASES.length - 1) {
+      setCurrentPhase(FLIGHT_PHASES[currentPhaseIndex + 1])
+    }
+  }
+
+  const handleAddItemForPhase = (phase: FlightPhase) => {
+    setCurrentPhase(phase)
+    setShowCreateModal(true)
+  }
+
   if (loading || !flight) {
     return (
       <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
@@ -52,7 +83,11 @@ export default function FlightDetailView({ flightId, onClose }: FlightDetailView
   return (
     <div className="fixed inset-0 bg-white flex z-50 safe-bottom">
       {/* Sidebar with Phases */}
-      <PhaseSidebar currentPhase={currentPhase} isCriticalPhase={isCriticalPhase} />
+      <PhaseSidebar 
+        currentPhase={currentPhase} 
+        isCriticalPhase={isCriticalPhase}
+        onAddItemForPhase={handleAddItemForPhase}
+      />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
@@ -83,19 +118,31 @@ export default function FlightDetailView({ flightId, onClose }: FlightDetailView
           <RecallCardList items={filteredItems} />
         </div>
 
-        {/* Add Item Button */}
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="m-4 px-6 py-3 bg-blue-600 text-white rounded-full shadow-lg font-semibold hover:bg-blue-700 active:bg-blue-800 touch-target"
-        >
-          + New Item
-        </button>
-
         {showCreateModal && (
           <CreateRecallModal
             onClose={() => setShowCreateModal(false)}
           />
         )}
+      </div>
+
+      {/* Floating Navigation Buttons at Bottom Right */}
+      <div className="fixed bottom-safe-bottom right-4 flex flex-col gap-2 z-40 mb-4">
+        <button
+          onClick={handlePrevPhase}
+          disabled={currentPhaseIndex === 0}
+          className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold text-xl shadow-lg transition-colors flex items-center justify-center"
+          title="Previous phase"
+        >
+          ↑
+        </button>
+        <button
+          onClick={handleNextPhase}
+          disabled={currentPhaseIndex === FLIGHT_PHASES.length - 1}
+          className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold text-xl shadow-lg transition-colors flex items-center justify-center"
+          title="Next phase"
+        >
+          ↓
+        </button>
       </div>
     </div>
   )
