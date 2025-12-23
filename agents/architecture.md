@@ -3,12 +3,14 @@
 ## ✅ Completed Implementation
 
 ### Phase 1: Architecture & Setup (Offline & Mobile-First)
+
 - ✅ **Vite + TypeScript Scaffolding** - Full project setup with modern build tools
 - ✅ **iOS/PWA Configuration** - `manifest.json` with standalone mode, viewport meta tags
 - ✅ **Tailwind CSS Setup** - Custom safe-area utilities for iPad notch/home bar handling
 - ✅ **Responsive Styling** - 16px input font-size to prevent iOS auto-zoom
 
 ### Phase 2: Offline Data Layer (The "Brain")
+
 - ✅ **Dexie.js Integration** - IndexedDB wrapper with typed schemas
 - ✅ **RecallItems Store** - Full CRUD with id, title, phases, description, reference, mediaBlob, threats, isTier1
 - ✅ **FlightLists Store** - Date-based flight list management with activeItemIds
@@ -17,18 +19,19 @@
 - ✅ **Timestamp Tracking** - createdAt/updatedAt on all database records
 
 ### Phase 3: State Management & Testing
+
 - ✅ **Zustand Store** - Global state for currentPhase, activeFlightList, recall items
 - ✅ **Vitest Configuration** - Unit testing with happy-dom environment
 - ✅ **fake-indexeddb** - Headless database testing without browser
 - ✅ **React Testing Library** - Setup for future component tests
 
 ### Phase 4: Core Business Logic (The "Trust Architecture")
+
 - ✅ **useRecallManager Hook** - CRUD operations with validation
   - Title & phases are mandatory
   - Input sanitization (no auto-inject)
   - Error handling & loading states
   - **8 Unit Tests** - All passing
-  
 - ✅ **usePhaseFilter Hook** - Deterministic filtering with zero latency
   - Phase-based filtering (item.phases includes currentPhase)
   - Tier-1 critical phase filtering
@@ -36,6 +39,7 @@
   - **9 Unit Tests** - All passing
 
 ### Phase 5: UI Components (iOS Safari Optimized)
+
 - ✅ **PhaseIndicator** - Sticky header with current phase, item count, Tier-1 toggle (legacy)
 - ✅ **RecallCard** - Visual display with threats (yellow), reference (grey), phase badges
 - ✅ **RecallCardList** - Scrollable list with empty state messaging
@@ -47,6 +51,7 @@
 - ✅ **FlightDetailView** - Flight-centric view with sidebar, dark header, recall item management
 
 ### Phase 6: Integration & Lifecycle Testing
+
 - ✅ **Flight Lifecycle Tests** - Taxi → Approach phase transitions
 - ✅ **Data Persistence Tests** - Verify data survives page reload
 - ✅ **Offline-First Verification** - Zero network requests in full flow
@@ -54,6 +59,7 @@
 - ✅ **6 Integration Tests** - All passing
 
 ## 📊 Test Results
+
 ```
 Test Files  6 passed (6)
       Tests  46 passed (46)
@@ -61,6 +67,7 @@ Test Files  6 passed (6)
 ```
 
 ## 🎯 Build Status
+
 - ✅ TypeScript Compilation - Zero errors
 - ✅ Vite Bundle - 60 modules, 265.25 kB (84.96 kB gzipped)
 - ✅ Production Build - Ready for deployment (output to dist/)
@@ -68,6 +75,7 @@ Test Files  6 passed (6)
 - ✅ ESLint Verification - Zero linting violations
 
 ## 📁 Project Structure
+
 ```
 src/
 ├── App.tsx                       # Root component routing to FlightListScreen
@@ -106,6 +114,7 @@ src/
 ## 🚀 Next Steps (Optional Enhancements)
 
 ### Design Guidelines Integration
+
 The implementation now follows the design principles defined in `agents/design.md`:
 
 1. **Glanceable Interface** - Flight list home screen with quick visual scanning of departure/arrival times, durations, item counts
@@ -128,6 +137,7 @@ The implementation now follows the design principles defined in `agents/design.m
 9. **Deployment** - Build to iOS app or deploy to web server
 
 ## 📝 Notes
+
 - All code follows strict TypeScript with noUnusedLocals/noUnusedParameters
 - Pure functions where possible for testability
 - Zero external dependencies for core logic (only React, Dexie, Zustand)
@@ -136,6 +146,7 @@ The implementation now follows the design principles defined in `agents/design.m
 - 16px font-size on inputs prevents iOS auto-zoom
 
 ## 🎓 Architecture Highlights
+
 - **Offline-First**: All data stored in IndexedDB, no server required
 - **Flight-Centric**: UI organized around flights, not generic recall items
 - **Deterministic Filtering**: Zero-latency phase filtering via pure functions

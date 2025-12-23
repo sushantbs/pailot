@@ -1,54 +1,52 @@
-import { useState, FormEvent } from 'react'
-import { FlightPhase } from '../types/index'
-import { useRecallManager } from '../hooks/useRecallManager'
+import { useState, FormEvent } from "react";
+import { FlightPhase } from "../types/index";
+import { useRecallManager } from "../hooks/useRecallManager";
 
 interface CreateRecallModalProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const FLIGHT_PHASES: FlightPhase[] = [
-  'Preflight',
-  'Taxi',
-  'Takeoff',
-  'Climb',
-  'Cruise',
-  'Descent',
-  'Approach',
-  'Landing',
-  'Shutdown',
-]
+  "Preflight",
+  "Taxi",
+  "Takeoff",
+  "Climb",
+  "Cruise",
+  "Descent",
+  "Approach",
+  "Landing",
+  "Shutdown",
+];
 
 export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [reference, setReference] = useState('')
-  const [selectedPhases, setSelectedPhases] = useState<FlightPhase[]>([])
-  const [threats, setThreats] = useState('')
-  const [isTier1, setIsTier1] = useState(false)
-  const [mediaFile, setMediaFile] = useState<File | null>(null)
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [reference, setReference] = useState("");
+  const [selectedPhases, setSelectedPhases] = useState<FlightPhase[]>([]);
+  const [threats, setThreats] = useState("");
+  const [isTier1, setIsTier1] = useState(false);
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
 
-  const { addRecallItem, error, loading } = useRecallManager()
+  const { addRecallItem, error, loading } = useRecallManager();
 
   const handlePhaseToggle = (phase: FlightPhase) => {
-    setSelectedPhases(prev =>
-      prev.includes(phase)
-        ? prev.filter(p => p !== phase)
-        : [...prev, phase]
-    )
-  }
+    setSelectedPhases((prev) =>
+      prev.includes(phase) ? prev.filter((p) => p !== phase) : [...prev, phase]
+    );
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const threatsArray = threats
-        .split('\n')
-        .map(t => t.trim())
-        .filter(Boolean)
+        .split("\n")
+        .map((t) => t.trim())
+        .filter(Boolean);
 
-      let mediaBlob: Blob | undefined
+      let mediaBlob: Blob | undefined;
       if (mediaFile) {
-        mediaBlob = new Blob([mediaFile], { type: mediaFile.type })
+        mediaBlob = new Blob([mediaFile], { type: mediaFile.type });
       }
 
       await addRecallItem({
@@ -59,22 +57,22 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
         threats: threatsArray,
         isTier1,
         mediaBlob,
-      })
+      });
 
       // Reset form and close
-      setTitle('')
-      setDescription('')
-      setReference('')
-      setSelectedPhases([])
-      setThreats('')
-      setIsTier1(false)
-      setMediaFile(null)
-      onClose()
+      setTitle("");
+      setDescription("");
+      setReference("");
+      setSelectedPhases([]);
+      setThreats("");
+      setIsTier1(false);
+      setMediaFile(null);
+      onClose();
     } catch (err) {
       // Error is handled by the hook
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end safe-bottom">
@@ -97,13 +95,11 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
           )}
 
           <div>
-            <label className="block text-sm font-semibold mb-2">
-              Title *
-            </label>
+            <label className="block text-sm font-semibold mb-2">Title *</label>
             <input
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Deicing Procedure"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
               required
@@ -116,7 +112,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
             </label>
             <textarea
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Additional context for this recall item"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base h-24 resize-none"
             />
@@ -127,15 +123,15 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
               Flight Phases * ({selectedPhases.length} selected)
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {FLIGHT_PHASES.map(phase => (
+              {FLIGHT_PHASES.map((phase) => (
                 <button
                   key={phase}
                   type="button"
                   onClick={() => handlePhaseToggle(phase)}
                   className={`px-4 py-3 rounded-lg font-semibold transition-colors duration-100 touch-target ${
                     selectedPhases.includes(phase)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700'
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700"
                   }`}
                 >
                   {phase}
@@ -151,7 +147,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
             <input
               type="text"
               value={reference}
-              onChange={e => setReference(e.target.value)}
+              onChange={(e) => setReference(e.target.value)}
               placeholder="e.g., OM-C 4.3.2"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
             />
@@ -163,7 +159,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
             </label>
             <textarea
               value={threats}
-              onChange={e => setThreats(e.target.value)}
+              onChange={(e) => setThreats(e.target.value)}
               placeholder="Icing conditions&#10;Fuel calculations"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base h-20 resize-none"
             />
@@ -176,7 +172,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
             <input
               type="file"
               accept="image/*,.pdf"
-              onChange={e => setMediaFile(e.target.files?.[0] || null)}
+              onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base"
             />
           </div>
@@ -186,7 +182,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
               type="checkbox"
               id="tier1"
               checked={isTier1}
-              onChange={e => setIsTier1(e.target.checked)}
+              onChange={(e) => setIsTier1(e.target.checked)}
               className="w-5 h-5 rounded"
             />
             <label htmlFor="tier1" className="font-semibold text-gray-700">
@@ -207,11 +203,11 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
               disabled={loading}
               className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-blue-300 touch-target"
             >
-              {loading ? 'Saving...' : 'Create Item'}
+              {loading ? "Saving..." : "Create Item"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

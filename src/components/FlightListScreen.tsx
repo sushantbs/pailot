@@ -1,24 +1,31 @@
-import { useState } from 'react'
-import { useAppStore } from '../store/appStore'
-import FlightCreationModal from './FlightCreationModal'
-import FlightDetailView from './FlightDetailView'
+import { useState } from "react";
+import { useAppStore } from "../store/appStore";
+import FlightCreationModal from "./FlightCreationModal";
+import FlightDetailView from "./FlightDetailView";
 
 export default function FlightListScreen() {
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedFlightId, setSelectedFlightId] = useState<number | null>(null)
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedFlightId, setSelectedFlightId] = useState<number | null>(null);
 
-  const { flightLists } = useAppStore()
+  const { flightLists } = useAppStore();
 
   const formatFlightTime = (timestamp: number) => {
-    const date = new Date(timestamp)
-    return date.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-  }
+    const date = new Date(timestamp);
+    return date.toLocaleString([], {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const getFlightDuration = (departure: number, arrival: number) => {
-    const hours = Math.floor((arrival - departure) / (1000 * 60 * 60))
-    const minutes = Math.floor(((arrival - departure) % (1000 * 60 * 60)) / (1000 * 60))
-    return `${hours}h ${minutes}m`
-  }
+    const hours = Math.floor((arrival - departure) / (1000 * 60 * 60));
+    const minutes = Math.floor(
+      ((arrival - departure) % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    return `${hours}h ${minutes}m`;
+  };
 
   if (selectedFlightId) {
     return (
@@ -26,7 +33,7 @@ export default function FlightListScreen() {
         flightId={selectedFlightId}
         onClose={() => setSelectedFlightId(null)}
       />
-    )
+    );
   }
 
   return (
@@ -34,7 +41,9 @@ export default function FlightListScreen() {
       {/* Header */}
       <div className="bg-gray-900 text-white px-4 py-6 border-b border-gray-800">
         <h1 className="text-3xl font-bold">Flights</h1>
-        <p className="text-gray-400 text-sm mt-1">{flightLists.length} flight{flightLists.length !== 1 ? 's' : ''}</p>
+        <p className="text-gray-400 text-sm mt-1">
+          {flightLists.length} flight{flightLists.length !== 1 ? "s" : ""}
+        </p>
       </div>
 
       {/* Flights List */}
@@ -57,7 +66,9 @@ export default function FlightListScreen() {
                   className="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all text-left"
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">{flight.title}</h3>
+                    <h3 className="text-lg font-bold text-gray-900">
+                      {flight.title}
+                    </h3>
                     <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-1 rounded">
                       {flight.activeItemIds.length} items
                     </span>
@@ -66,16 +77,24 @@ export default function FlightListScreen() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <p className="text-gray-600">Depart</p>
-                      <p className="font-semibold text-gray-900">{formatFlightTime(flight.departureTime)}</p>
+                      <p className="font-semibold text-gray-900">
+                        {formatFlightTime(flight.departureTime)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-gray-600">Arrive</p>
-                      <p className="font-semibold text-gray-900">{formatFlightTime(flight.arrivalTime)}</p>
+                      <p className="font-semibold text-gray-900">
+                        {formatFlightTime(flight.arrivalTime)}
+                      </p>
                     </div>
                   </div>
 
                   <p className="text-xs text-gray-500 mt-2">
-                    Duration: {getFlightDuration(flight.departureTime, flight.arrivalTime)}
+                    Duration:{" "}
+                    {getFlightDuration(
+                      flight.departureTime,
+                      flight.arrivalTime
+                    )}
                   </p>
                 </button>
               ))}
@@ -98,11 +117,11 @@ export default function FlightListScreen() {
         <FlightCreationModal
           onClose={() => setShowCreateModal(false)}
           onFlightCreated={(flightId) => {
-            setShowCreateModal(false)
-            setSelectedFlightId(flightId)
+            setShowCreateModal(false);
+            setSelectedFlightId(flightId);
           }}
         />
       )}
     </div>
-  )
+  );
 }

@@ -1,28 +1,32 @@
-import { useAppStore } from '../store/appStore'
-import { FlightPhase } from '../types/index'
+import { useAppStore } from "../store/appStore";
+import { FlightPhase } from "../types/index";
 
 const FLIGHT_PHASES: FlightPhase[] = [
-  'Preflight',
-  'Taxi',
-  'Takeoff',
-  'Climb',
-  'Cruise',
-  'Descent',
-  'Approach',
-  'Landing',
-  'Shutdown',
-]
+  "Preflight",
+  "Taxi",
+  "Takeoff",
+  "Climb",
+  "Cruise",
+  "Descent",
+  "Approach",
+  "Landing",
+  "Shutdown",
+];
 
 interface PhaseSidebarProps {
-  currentPhase: FlightPhase
-  isCriticalPhase: boolean
-  onAddItemForPhase?: (phase: FlightPhase) => void
+  currentPhase: FlightPhase;
+  isCriticalPhase: boolean;
+  onAddItemForPhase?: (phase: FlightPhase) => void;
 }
 
-export default function PhaseSidebar({ currentPhase, isCriticalPhase, onAddItemForPhase }: PhaseSidebarProps) {
-  const { setCurrentPhase, setIsCriticalPhase } = useAppStore()
+export default function PhaseSidebar({
+  currentPhase,
+  isCriticalPhase,
+  onAddItemForPhase,
+}: PhaseSidebarProps) {
+  const { setCurrentPhase, setIsCriticalPhase } = useAppStore();
 
-  const currentPhaseIndex = FLIGHT_PHASES.indexOf(currentPhase)
+  const currentPhaseIndex = FLIGHT_PHASES.indexOf(currentPhase);
 
   return (
     <div className="w-40 bg-gray-900 text-white flex flex-col safe-top safe-bottom">
@@ -31,18 +35,18 @@ export default function PhaseSidebar({ currentPhase, isCriticalPhase, onAddItemF
         onClick={() => setIsCriticalPhase(!isCriticalPhase)}
         className={`px-3 py-3 text-sm font-bold transition-colors duration-150 border-b-2 ${
           isCriticalPhase
-            ? 'bg-red-700 border-red-900'
-            : 'bg-gray-800 border-gray-700 hover:bg-gray-700'
+            ? "bg-red-700 border-red-900"
+            : "bg-gray-800 border-gray-700 hover:bg-gray-700"
         }`}
       >
-        {isCriticalPhase ? '🚨 TIER-1' : 'ALL PHASES'}
+        {isCriticalPhase ? "🚨 TIER-1" : "ALL PHASES"}
       </button>
 
       {/* Phases List with Add Item Button */}
       <div className="flex-1 overflow-y-auto">
         {FLIGHT_PHASES.map((phase, index) => {
-          const isActive = phase === currentPhase
-          const isDisabledPrev = index < currentPhaseIndex
+          const isActive = phase === currentPhase;
+          const isDisabledPrev = index < currentPhaseIndex;
 
           return (
             <div key={phase}>
@@ -50,10 +54,10 @@ export default function PhaseSidebar({ currentPhase, isCriticalPhase, onAddItemF
                 onClick={() => setCurrentPhase(phase)}
                 className={`w-full px-3 py-3 text-sm font-semibold text-left transition-colors duration-100 border-l-4 ${
                   isActive
-                    ? 'bg-blue-600 border-blue-400 text-white'
+                    ? "bg-blue-600 border-blue-400 text-white"
                     : isDisabledPrev
-                      ? 'bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed'
-                      : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
+                    ? "bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
                 }`}
               >
                 {phase}
@@ -67,9 +71,9 @@ export default function PhaseSidebar({ currentPhase, isCriticalPhase, onAddItemF
                 </button>
               )}
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
