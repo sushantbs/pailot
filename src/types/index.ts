@@ -22,6 +22,7 @@ export interface RecallItem {
   mediaBlob?: Blob;
   threats?: string[];
   isTier1?: boolean;
+  isDeeplink?: boolean;
   createdAt: number;
   updatedAt: number;
 }

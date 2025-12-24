@@ -18,6 +18,15 @@ const FLIGHT_PHASES: FlightPhase[] = [
   "Shutdown",
 ];
 
+// Detect if text contains a deeplink to an app (e.g., http://, https://, or app-specific schemes)
+const isDeeplink = (text: string): boolean => {
+  const deeplinkPatterns = [
+    /^https?:\/\//i, // HTTP/HTTPS URLs
+    /^[a-z][a-z0-9+.-]*:\/\//i, // App-specific schemes (e.g., maps://, tel:, etc.)
+  ];
+  return deeplinkPatterns.some((pattern) => pattern.test(text.trim()));
+};
+
 export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -49,6 +58,9 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
         mediaBlob = new Blob([mediaFile], { type: mediaFile.type });
       }
 
+      // Check if title is a deeplink
+      const titleIsDeeplink = isDeeplink(title);
+
       await addRecallItem({
         title,
         description,
@@ -56,6 +68,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
         phases: selectedPhases,
         threats: threatsArray,
         isTier1,
+        isDeeplink: titleIsDeeplink,
         mediaBlob,
       });
 

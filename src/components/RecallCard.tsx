@@ -8,10 +8,21 @@ export default function RecallCard({ item }: RecallCardProps) {
   return (
     <div className="recall-card">
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-lg font-bold text-gray-900 flex-1">
-          {item.title}
-          {item.isTier1 && <span className="ml-2 text-red-600 font-bold">★</span>}
-        </h3>
+        {item.isDeeplink ? (
+          <a
+            href={item.title}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-lg font-bold text-blue-600 hover:text-blue-800 underline flex-1 break-all"
+          >
+            {item.title}
+          </a>
+        ) : (
+          <h3 className="text-lg font-bold text-gray-900 flex-1">
+            {item.title}
+          </h3>
+        )}
+        {item.isTier1 && <span className="ml-2 text-red-600 font-bold">★</span>}
       </div>
 
       {item.description && (
