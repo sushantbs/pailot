@@ -132,12 +132,12 @@ export default function FlightDetailView({
         {/* Header */}
         <div className="bg-gray-900 text-white px-4 py-6 border-b border-gray-800 safe-top">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">{flight?.title}</h1>
-            <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold flex-1">{flight?.title}</h1>
+            <div className="flex items-center gap-2 ml-4 flex-shrink-0">
               <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
-                  className="text-2xl text-gray-400 hover:text-white transition-colors"
+                  className="text-2xl text-white hover:text-gray-300 transition-colors"
                   title="Menu"
                 >
                   ⋮
@@ -169,7 +169,7 @@ export default function FlightDetailView({
               </div>
               <button
                 onClick={onClose}
-                className="text-2xl text-gray-400 hover:text-white font-light transition-colors"
+                className="text-2xl text-white hover:text-gray-300 font-light transition-colors"
               >
                 ✕
               </button>
@@ -253,9 +253,12 @@ export default function FlightDetailView({
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
           <div className="bg-white rounded-lg shadow-xl max-w-sm mx-4 p-6 safe-bottom">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Flight?</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Delete Flight?
+            </h2>
             <p className="text-gray-600 mb-6">
-              Flight information cannot be recovered. Are you sure you want to delete this flight?
+              Flight information cannot be recovered. Are you sure you want to
+              delete this flight?
             </p>
             <div className="flex gap-3">
               <button
