@@ -108,13 +108,13 @@ describe("Deeplink Detection Logic", () => {
   });
 
   describe("RecallItem with isDeeplink flag", () => {
-    it("should store deeplink flag when creating item with URL title", () => {
+    it("should store deeplink flag when creating item with URL reference", () => {
       const item: RecallItem = {
         id: 1,
-        title: "https://example.com/checklist",
+        title: "Checklist",
         description: "Link to checklist",
         phases: ["Preflight"],
-        reference: "",
+        reference: "https://example.com/checklist",
         isDeeplink: isDeeplink("https://example.com/checklist"),
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -123,13 +123,13 @@ describe("Deeplink Detection Logic", () => {
       expect(item.isDeeplink).toBe(true);
     });
 
-    it("should store deeplink flag when creating item with app scheme", () => {
+    it("should store deeplink flag when creating item with app scheme in reference", () => {
       const item: RecallItem = {
         id: 1,
-        title: "maps://coordinates",
+        title: "Location Check",
         description: "Link to coordinates",
         phases: ["Approach"],
-        reference: "",
+        reference: "maps://coordinates",
         isDeeplink: isDeeplink("maps://coordinates"),
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -138,14 +138,14 @@ describe("Deeplink Detection Logic", () => {
       expect(item.isDeeplink).toBe(true);
     });
 
-    it("should not set deeplink flag for normal text", () => {
+    it("should not set deeplink flag for normal reference text", () => {
       const item: RecallItem = {
         id: 1,
         title: "Check fuel gauge",
         description: "Verify fuel before takeoff",
         phases: ["Preflight"],
-        reference: "",
-        isDeeplink: isDeeplink("Check fuel gauge"),
+        reference: "OM-A 2.1",
+        isDeeplink: isDeeplink("OM-A 2.1"),
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
@@ -159,7 +159,7 @@ describe("Deeplink Detection Logic", () => {
         title: "Deicing procedure",
         description: "",
         phases: ["Preflight"],
-        reference: "",
+        reference: "OM-B 3.2",
         // isDeeplink not provided, should be undefined
         createdAt: Date.now(),
         updatedAt: Date.now(),

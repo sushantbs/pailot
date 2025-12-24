@@ -58,8 +58,8 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
         mediaBlob = new Blob([mediaFile], { type: mediaFile.type });
       }
 
-      // Check if title is a deeplink
-      const titleIsDeeplink = isDeeplink(title);
+      // Check if reference is a deeplink
+      const referenceIsDeeplink = isDeeplink(reference);
 
       await addRecallItem({
         title,
@@ -68,7 +68,7 @@ export default function CreateRecallModal({ onClose }: CreateRecallModalProps) {
         phases: selectedPhases,
         threats: threatsArray,
         isTier1,
-        isDeeplink: titleIsDeeplink,
+        isDeeplink: referenceIsDeeplink,
         mediaBlob,
       });
 

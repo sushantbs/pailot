@@ -37,6 +37,7 @@ export function useRecallManager() {
           mediaBlob: item.mediaBlob,
           threats: item.threats?.map((t) => t.trim()).filter(Boolean) || [],
           isTier1: item.isTier1 ?? false,
+          isDeeplink: item.isDeeplink ?? false,
         };
 
       const id = await StorageManager.addRecallItem(sanitizedItem);
