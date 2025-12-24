@@ -133,7 +133,8 @@ export default function FlightDetailView({
           <div className="text-2xl font-bold text-blue-400 flex items-center gap-2">
             <span>{currentPhase}</span>
             <span className="text-lg text-gray-400">
-              ({filteredItems.length} item{filteredItems.length !== 1 ? "s" : ""})
+              ({filteredItems.length} item
+              {filteredItems.length !== 1 ? "s" : ""})
             </span>
           </div>
         </div>
@@ -149,9 +150,7 @@ export default function FlightDetailView({
 
         {/* Recall Items */}
         <div className="flex-1">
-          <RecallCardList
-            items={filteredItems}
-          />
+          <RecallCardList items={filteredItems} />
         </div>
 
         {showCreateModal && (

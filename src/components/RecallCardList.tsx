@@ -5,9 +5,7 @@ interface RecallCardListProps {
   items: RecallItem[];
 }
 
-export default function RecallCardList({
-  items,
-}: RecallCardListProps) {
+export default function RecallCardList({ items }: RecallCardListProps) {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4">
