@@ -173,6 +173,7 @@ The implementation now follows the design principles defined in `agents/design.m
 ## ✈️ Flight Lifecycle Workflow
 
 ### Flight Creation
+
 1. Pilot taps "Create Flight" button in FlightListScreen
 2. FlightCreationModal opens with form fields (from/to airports, departure/arrival times)
 3. Auto-generates flight title: "JFK-LAX 0830" format
@@ -180,6 +181,7 @@ The implementation now follows the design principles defined in `agents/design.m
 5. Flight appears in "Live" tab on FlightListScreen
 
 ### Flight Details & Item Management
+
 1. Pilot taps a flight card to open FlightDetailView
 2. FlightDetailView loads flight data and recall items for that flight
 3. PhaseSidebar allows phase navigation (Preflight → Shutdown)
@@ -191,6 +193,7 @@ The implementation now follows the design principles defined in `agents/design.m
    - Toggle Tier-1 critical phase filtering
 
 ### Flight Completion
+
 1. Pilot taps three-dot menu in FlightDetailView header
 2. Taps "Mark as Complete" (only visible for live flights)
 3. Flight status updated from "live" to "completed" in database
@@ -198,6 +201,7 @@ The implementation now follows the design principles defined in `agents/design.m
 5. Flight now appears in "Completed" tab on FlightListScreen
 
 ### Flight Deletion
+
 1. Pilot taps three-dot menu in FlightDetailView header or on flight card
 2. Taps "Delete Flight" (available for all flights)
 3. Delete confirmation modal appears with warning message
