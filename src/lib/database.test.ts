@@ -140,6 +140,7 @@ describe("Flight Lifecycle Integration Tests", () => {
       title: "JFK-LAX 0900",
       activeItemIds: [id1, id2],
       notes: "Test Flight",
+      status: "live",
     });
 
     // Retrieve flight list
@@ -175,6 +176,7 @@ describe("Flight Lifecycle Integration Tests", () => {
       arrivalTime: now + 1 * 60 * 60 * 1000,
       title: "SFO-SJC 1000",
       activeItemIds: [id1],
+      status: "live",
     });
 
     // Get items for flight list
@@ -201,6 +203,7 @@ describe("Flight Lifecycle Integration Tests", () => {
       title: "ORD-MIA 1200",
       activeItemIds: [id1],
       notes: "Original",
+      status: "live",
     });
 
     // Wait a bit to ensure timestamp difference

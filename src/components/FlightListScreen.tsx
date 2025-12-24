@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useAppStore } from "../store/appStore";
+import { StorageManager } from "../lib/database";
 import FlightCreationModal from "./FlightCreationModal";
 import FlightDetailView from "./FlightDetailView";
 
 export default function FlightListScreen() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedFlightId, setSelectedFlightId] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<"live" | "completed">("live");
 
-  const { flightLists } = useAppStore();
+  const { flightLists, setFlightLists } = useAppStore();
 
   const formatFlightTime = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -27,6 +29,26 @@ export default function FlightListScreen() {
     return `${hours}h ${minutes}m`;
   };
 
+  const handleCompleteFlight = async (flightId: number) => {
+    try {
+      await StorageManager.updateFlightList(flightId, { status: "completed" });
+      const updated = await StorageManager.getAllFlightLists();
+      setFlightLists(updated);
+    } catch (err) {
+      console.error("Failed to complete flight:", err);
+    }
+  };
+
+  const handleDeleteFlight = async (flightId: number) => {
+    try {
+      await StorageManager.deleteFlightList(flightId);
+      const updated = await StorageManager.getAllFlightLists();
+      setFlightLists(updated);
+    } catch (err) {
+      console.error("Failed to delete flight:", err);
+    }
+  };
+
   if (selectedFlightId) {
     return (
       <FlightDetailView
@@ -35,6 +57,8 @@ export default function FlightListScreen() {
       />
     );
   }
+
+  const filteredFlights = flightLists.filter((f) => f.status === activeTab);
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col safe-top safe-bottom">
@@ -46,57 +70,109 @@ export default function FlightListScreen() {
         </p>
       </div>
 
+      {/* Tabs */}
+      <div className="bg-white border-b border-gray-200 flex">
+        <button
+          onClick={() => setActiveTab("live")}
+          className={`flex-1 px-4 py-3 font-semibold transition-colors ${
+            activeTab === "live"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          Live
+        </button>
+        <button
+          onClick={() => setActiveTab("completed")}
+          className={`flex-1 px-4 py-3 font-semibold transition-colors ${
+            activeTab === "completed"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          Completed
+        </button>
+      </div>
+
       {/* Flights List */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {flightLists.length === 0 ? (
+        {filteredFlights.length === 0 ? (
           <div className="flex items-center justify-center h-full text-center text-gray-500">
             <div>
-              <p className="text-lg font-semibold mb-2">No flights yet</p>
-              <p className="text-sm">Create a new flight to get started</p>
+              <p className="text-lg font-semibold mb-2">
+                No {activeTab} flights
+              </p>
+              <p className="text-sm">
+                {activeTab === "live"
+                  ? "Create a new flight to get started"
+                  : "Flights you complete will appear here"}
+              </p>
             </div>
           </div>
         ) : (
           <div className="space-y-3">
-            {[...flightLists]
+            {[...filteredFlights]
               .sort((a, b) => b.departureTime - a.departureTime)
               .map((flight) => (
-                <button
+                <div
                   key={flight.id}
-                  onClick={() => setSelectedFlightId(flight.id!)}
-                  className="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all text-left"
+                  className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">
-                      {flight.title}
-                    </h3>
-                    <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                      {flight.activeItemIds.length} items
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-600">Depart</p>
-                      <p className="font-semibold text-gray-900">
-                        {formatFlightTime(flight.departureTime)}
-                      </p>
+                  <button
+                    onClick={() => setSelectedFlightId(flight.id!)}
+                    className="w-full text-left hover:opacity-70 transition-opacity"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg font-bold text-gray-900">
+                        {flight.title}
+                      </h3>
+                      <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                        {flight.activeItemIds.length} items
+                      </span>
                     </div>
-                    <div>
-                      <p className="text-gray-600">Arrive</p>
-                      <p className="font-semibold text-gray-900">
-                        {formatFlightTime(flight.arrivalTime)}
-                      </p>
-                    </div>
-                  </div>
 
-                  <p className="text-xs text-gray-500 mt-2">
-                    Duration:{" "}
-                    {getFlightDuration(
-                      flight.departureTime,
-                      flight.arrivalTime
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-gray-600">Depart</p>
+                        <p className="font-semibold text-gray-900">
+                          {formatFlightTime(flight.departureTime)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Arrive</p>
+                        <p className="font-semibold text-gray-900">
+                          {formatFlightTime(flight.arrivalTime)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-500 mt-2">
+                      Duration:{" "}
+                      {getFlightDuration(
+                        flight.departureTime,
+                        flight.arrivalTime
+                      )}
+                    </p>
+                  </button>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
+                    {activeTab === "live" && (
+                      <button
+                        onClick={() => handleCompleteFlight(flight.id!)}
+                        className="flex-1 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-colors text-sm"
+                      >
+                        Complete
+                      </button>
                     )}
-                  </p>
-                </button>
+                    <button
+                      onClick={() => handleDeleteFlight(flight.id!)}
+                      className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-colors text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               ))}
           </div>
         )}

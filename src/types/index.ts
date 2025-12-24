@@ -35,6 +35,7 @@ export interface FlightList {
   title: string;
   activeItemIds: number[];
   notes?: string;
+  status: "live" | "completed";
   createdAt: number;
   updatedAt: number;
 }

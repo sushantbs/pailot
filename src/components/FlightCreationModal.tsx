@@ -62,6 +62,7 @@ export default function FlightCreationModal({
         arrivalTime: arrDateTime.getTime(),
         title,
         activeItemIds: [],
+        status: "live",
       });
 
       // Set as active flight
