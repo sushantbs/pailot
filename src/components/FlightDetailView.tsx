@@ -132,8 +132,17 @@ export default function FlightDetailView({
         {/* Header */}
         <div className="bg-gray-900 text-white px-4 py-6 border-b border-gray-800 safe-top">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold flex-1">{flight?.title}</h1>
-            <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+            <div className="flex items-center gap-3 flex-1">
+              <button
+                onClick={() => setShowPhaseDrawer(true)}
+                className="text-2xl text-white hover:text-gray-300 transition-colors"
+                title="Open phases"
+              >
+                ☰
+              </button>
+              <h1 className="text-3xl font-bold">{flight?.title}</h1>
+            </div>
+            <div className="flex items-center gap-4 ml-4 flex-shrink-0">
               <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
@@ -198,15 +207,6 @@ export default function FlightDetailView({
             </span>
           </div>
         </div>
-
-        {/* Burger Menu Button in Content */}
-        <button
-          onClick={() => setShowPhaseDrawer(true)}
-          className="absolute top-6 left-4 z-30 text-2xl text-gray-600 hover:text-gray-900 transition-colors safe-top"
-          title="Open phases"
-        >
-          ☰
-        </button>
 
         {/* Recall Items */}
         <div className="flex-1">
