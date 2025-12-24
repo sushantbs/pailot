@@ -86,8 +86,8 @@ export default function PhaseSidebar({
                   isActive
                     ? "bg-blue-600 border-blue-400 text-white"
                     : isDisabledPrev
-                      ? "bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
+                    ? "bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
                 }`}
               >
                 {phase}

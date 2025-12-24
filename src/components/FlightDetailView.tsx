@@ -33,8 +33,13 @@ export default function FlightDetailView({
   const [showPhaseDrawer, setShowPhaseDrawer] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { currentPhase, isCriticalPhase, recallItems, setCurrentPhase, setActiveFlightList } =
-    useAppStore();
+  const {
+    currentPhase,
+    isCriticalPhase,
+    recallItems,
+    setCurrentPhase,
+    setActiveFlightList,
+  } = useAppStore();
   const filteredItems = usePhaseFilter(
     currentPhase,
     recallItems,
@@ -98,20 +103,11 @@ export default function FlightDetailView({
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col relative">
         {/* Header */}
-        <div className="bg-gray-900 text-white px-4 py-4 border-b border-gray-800 safe-top">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowPhaseDrawer(true)}
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
-                title="Open phases"
-              >
-                ☰
-              </button>
-              <h1 className="text-2xl font-bold">{flight?.title}</h1>
-            </div>
+        <div className="bg-gray-900 text-white px-4 py-6 border-b border-gray-800 safe-top">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold">{flight?.title}</h1>
             <button
               onClick={onClose}
               className="text-2xl text-gray-400 hover:text-white font-light"
@@ -119,7 +115,7 @@ export default function FlightDetailView({
               ✕
             </button>
           </div>
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-400 mb-4">
             <p>
               {departureDate.toLocaleDateString()}{" "}
               {departureDate.toLocaleTimeString([], {
@@ -132,18 +128,29 @@ export default function FlightDetailView({
                 minute: "2-digit",
               })}
             </p>
-            <p>
-              {filteredItems.length} item{filteredItems.length !== 1 ? "s" : ""}{" "}
-              for <strong>{currentPhase}</strong>
-            </p>
+          </div>
+          {/* Current Phase Display - Bigger */}
+          <div className="text-2xl font-bold text-blue-400 flex items-center gap-2">
+            <span>{currentPhase}</span>
+            <span className="text-lg text-gray-400">
+              ({filteredItems.length} item{filteredItems.length !== 1 ? "s" : ""})
+            </span>
           </div>
         </div>
 
+        {/* Burger Menu Button in Content */}
+        <button
+          onClick={() => setShowPhaseDrawer(true)}
+          className="absolute top-6 left-4 z-30 text-2xl text-gray-600 hover:text-gray-900 transition-colors safe-top"
+          title="Open phases"
+        >
+          ☰
+        </button>
+
         {/* Recall Items */}
         <div className="flex-1">
-          <RecallCardList 
+          <RecallCardList
             items={filteredItems}
-            onAddItem={() => setShowCreateModal(true)}
           />
         </div>
 
@@ -169,6 +176,17 @@ export default function FlightDetailView({
           title="Next phase"
         >
           ↓
+        </button>
+      </div>
+
+      {/* Floating Add Item Button at Bottom Left */}
+      <div className="fixed bottom-safe-bottom left-4 z-40 mb-4">
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="w-12 h-12 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-xl shadow-lg transition-colors flex items-center justify-center"
+          title="Add recall item"
+        >
+          +
         </button>
       </div>
     </div>
